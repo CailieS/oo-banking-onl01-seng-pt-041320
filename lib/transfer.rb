@@ -32,7 +32,7 @@ class Transfer
       @counter+=1
       return "Transaction rejected. Please check your account balance."
     end
-    #@counter+=1
+    @counter+=1
   end
   end
 
