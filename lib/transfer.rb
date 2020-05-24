@@ -1,33 +1,35 @@
 
-class BankAccount
+require 'pry'
+class Transfer
+  attr_accessor :sender, :receiver, :amount, :status
 
-  attr_accessor :balance, :status, :array
-  attr_reader :name
-
-  def initialize(name)
-    @balance = 1000
-    @status = "open"
-    @name = name
-  end
-
-  def deposit(amount)
-    @balance += amount
-    @balance
-  end
-
-  def display_balance
-    "Your balance is $#{@balance}."
+  def initialize(sender, receiver, amount)
+    @sender = sender
+    @receiver = receiver
+    @amount = amount
+    @status = "pending"
   end
 
   def valid?
-    if @status == "open" && @balance > 0
-      true
+    @sender.valid? && @receiver.valid? ? true : false
+  end
+
+  def execute_transaction
+    if @sender.balance > @amount && @status == "pending"
+      @sender.balance -= @amount
+      @receiver.balance += @amount
+      @status = "complete"
     else
-      false
+      @status = "rejected"
+      return "Transaction rejected. Please check your account balance."
     end
   end
 
-  def close_account
-    @status = "closed"
+  def reverse_transfer
+    if @status == "complete"
+      @sender.balance += @amount
+      @receiver.balance -= @amount
+      @status = "reversed"
+    end
   end
 end
